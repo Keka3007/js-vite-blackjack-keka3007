@@ -1,12 +1,5 @@
-
-
 import _ from "underscore-node";
-//import { crearDeck as crearNuevoDeck  } from "./usescases/crear-deck";
-//import crearDeck, {miNombre} from "./usescases/crear-deck";
 import { crearDeck, pedirCarta, valorCarta, turnoComputadora, crearCartaHtml } from "./usescases";
- 
-
-
 
 const miModulo = (() => {
     'use strict';
@@ -15,8 +8,8 @@ const miModulo = (() => {
     const tipos = ['C','D','H','S'];
     const especiales = ['A','J','Q','K'];
 
-deck = crearDeck(tipos, especiales);
-console.log(deck);
+    deck = crearDeck(tipos, especiales);
+    console.log(deck);
 
     let puntosJugadores = [];
 
@@ -27,7 +20,6 @@ console.log(deck);
 
     const divCartasJugadores = document.querySelectorAll('.divCartas'),
           puntosHTML = document.querySelectorAll('small');
-
 
     // Esta función inicializa el juego 
     const inicializarJuego = ( numJugadores = 2 ) => {
@@ -43,11 +35,7 @@ console.log(deck);
 
         btnPedir.disabled   = false;
         btnDetener.disabled = false;
-
     }
-
-
-   
 
     // Turno: 0 = primer jugador y el último será la computadora
     const acumularPuntos = ( carta, turno ) => {
@@ -56,108 +44,87 @@ console.log(deck);
         return puntosJugadores[turno];
     }
 
-   const crearCarta = (carta, turno) => {
-
-    const imgCarta = crearCartaHtml(carta);
-
-    divCartasJugadores[turno].append(imgCarta);
-};
+    const crearCarta = (carta, turno) => {
+        const imgCarta = crearCartaHtml(carta);
+        divCartasJugadores[turno].append(imgCarta);
+    };
 
     const determinarGanador = () => {
-
         const [ puntosMinimos, puntosComputadora ] = puntosJugadores;
 
         setTimeout(() => {
             if( puntosComputadora === puntosMinimos ) {
                 alert('Nadie gana :(');
             } else if ( puntosMinimos > 21 ) {
-                alert('Computadora gana')
+                alert('Computadora gana');
             } else if( puntosComputadora > 21 ) {
                 alert('Jugador Gana');
             } else {
-                alert('Computadora Gana')
+                alert('Computadora Gana');
             }
         }, 100 );
-
     }
-
-  
-
-
 
     // Eventos
     btnPedir.addEventListener('click', () => {
-
         const carta = pedirCarta(deck);
         const puntosJugador = acumularPuntos( carta, 0 );
         
         crearCarta( carta, 0 );
 
-
         if ( puntosJugador > 21 ) {
             console.warn('Lo siento mucho, perdiste');
             btnPedir.disabled   = true;
             btnDetener.disabled = true;
+            
             turnoComputadora(
-    puntosJugador,
-    puntosHTML[1],
-    divCartasJugadores[1],
-    deck,
-    acumularPuntos,
-    crearCarta,
-    determinarGanador
-);
+                puntosJugadores[0],
+                puntosHTML[1],
+                divCartasJugadores[1],
+                deck,
+                acumularPuntos,
+                crearCarta,
+                determinarGanador
+            );
 
         } else if ( puntosJugador === 21 ) {
             console.warn('21, genial!');
             btnPedir.disabled   = true;
             btnDetener.disabled = true;
+            
             turnoComputadora(
-    puntosJugador,
-    puntosHTML[1],
-    divCartasJugadores[1],
-    deck,
-    acumularPuntos,
-    crearCarta,
-    determinarGanador
-);
+                puntosJugadores[0],
+                puntosHTML[1],
+                divCartasJugadores[1],
+                deck,
+                acumularPuntos,
+                crearCarta,
+                determinarGanador
+            );
         }
-
     });
-
 
     btnDetener.addEventListener('click', () => {
         btnPedir.disabled   = true;
         btnDetener.disabled = true;
 
         turnoComputadora(
-    puntosJugador,
-    puntosHTML[1],
-    divCartasJugadores[1],
-    deck,
-    acumularPuntos,
-    crearCarta,
-    determinarGanador
-);
+            puntosJugadores[0], 
+            puntosHTML[1],
+            divCartasJugadores[1],
+            deck,
+            acumularPuntos,
+            crearCarta,
+            determinarGanador
+        );
     });
 
-     btnNuevo.addEventListener('click', () => {
-        
+    btnNuevo.addEventListener('click', () => {
          inicializarJuego();
-
-     });
-
+    });
 
     return {
         nuevoJuego: inicializarJuego
     };
 
 })();
-
-
-
-
-
-
-
-
